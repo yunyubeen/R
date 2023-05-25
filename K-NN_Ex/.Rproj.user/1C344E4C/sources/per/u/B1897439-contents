@@ -1,0 +1,73 @@
+install.packages("caret")
+install.packages("MASS")
+
+library(MASS)
+library(caret)
+
+data("Boston")
+boston <- Boston
+str(boston)
+
+set.seed(1234)
+
+indexs <- createDataPartition(boston$medv, p = .85, list = FALSE)
+train_set <- boston[indexs, ]
+test_set <- boston[-indexs, ]
+
+dim(train_set)
+dim(test_set)
+
+head(train_set, 5)
+summary(train_set)
+
+train_x <- scale(train_set[, -14])
+train_y <- train_set[, 14]
+test_x <- scale(test_set[, -14])
+test_y <- test_set[, 14]
+
+head(train_set, 5)
+summary(train_x)
+
+model <- knnreg(train_x, train_y)
+model
+
+pred <- predict(model, data.frame(test_x))
+head(pred, 10)
+
+mse <- mean((test_y - pred)^2)
+mae <- MAE(test_y, pred)
+rmse <- RMSE(test_y, pred)
+cat("MSE:", mse, "MAE:", mae, "RMSE:", rmse)
+
+x <- 1:length(test_y)
+plot(x, test_y, col = "red", type = "l", lwd = 2,
+     main = "Boston housing test data prediction")
+lines(x, pred, col = "blue", lwd = 2)
+legend("topright",
+       legend = c("original-medv", "predicted-medv"),
+       fill = c("red", "blue"),
+       col = 2:3, adj = c(0, 0.6))
+grid()
+
+rmse_list <- numeric(10)
+mae_list <- numeric(10)
+for (k in 1:10){
+  
+  pred <- predict(
+    knnreg(train_x, train_y, k = k),
+    data.frame(test_x))
+  rmse_list[k] <- RMSE(test_y, pred)
+  mae_list[k] <- MAE(test_y, pred)
+  
+  mse <- mean((test_y - pred)^2)
+  mae <- MAE(test_y, pred)
+  rmse <- RMSE(test_y, pred)
+  
+  print(sprintf("k=%d, MSE: %.1f, MAE: %.1f, RMSE: %.1f", k, mse, mae, rmse ))
+}
+
+plot(rmse_list,
+     type = 'b',
+     pch = 19, col = "black", lwd = 2,
+     xlab = "k", ylab = "RMSE", main = "Result")
+grid()

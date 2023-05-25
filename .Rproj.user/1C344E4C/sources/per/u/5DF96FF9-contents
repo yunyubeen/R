@@ -1,0 +1,10 @@
+jhk <- read.csv("/Users/yun-yubeen/RTest/인사평가결과.csv",
+                header = TRUE, sep = ",", stringsAsFactors = TRUE, fileEncoding = "euc-kr")
+dim(jhk)
+colnames(jhk)
+head(jhk, 5)
+
+varname <- c("협동성", "자기주장", "기능", "지식")
+jhk2 <- jhk[, varname]
+apply(jhk2, 1, mean)
+

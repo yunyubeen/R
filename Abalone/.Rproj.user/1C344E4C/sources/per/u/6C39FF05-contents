@@ -1,0 +1,50 @@
+jhk <- read.csv(
+  "/Users/yun-yubeen/RTest/인사평가결과.csv",
+  header = TRUE, sep =",", stringsAsFactors = TRUE, fileEncoding = "euc-kr")
+dim(jhk)
+
+colnames(jhk)
+head(jhk, 3)
+
+install.packages("showtext")
+library(showtext)
+install.packages("curl")
+library(curl)
+font_add_google("Nanum Gothic", "nanumgothic")
+showtext.auto()
+
+par(family="nanumgothic")
+
+varname <- c("협동성", "자기주장", "기능", "지식")
+jhk2 <- jhk[, varname]
+func <- jhk$기능
+knowledge <- jhk$지식
+plot(func, knowledge,
+     pch = 21, col = "blue", bg ="orange", xlab = "기능", ylab = "지식", family = "nanumgothic")
+cols <- c("협동성", "자기주장", "스트레스")
+
+plot(jhk[, cols])
+par(family="nanumgothic")
+library(lattice)
+
+xyplot(지식 ~ 기능 | 연령 + 부서, data = jhk)
+cor(func, knowledge)
+
+water_table <- read.csv(
+  "/Users/yun-yubeen/RTest/water.table.csv",
+  header = TRUE, sep =",", stringsAsFactors = TRUE, fileEncoding = "euc-kr")
+
+colnames(water_table)
+summer <- water_table$Summer
+winter <- water_table$Winter
+cor.test(summer, winter)
+cor(jhk[, cols])
+
+install.packages("psych")
+library(psych)
+col_test_result <- corr.test(jhk[, cols])
+col_test_result$t
+col_test_result$p
+
+H <- c(5, 25, 25, 35, 60)
+var(H)

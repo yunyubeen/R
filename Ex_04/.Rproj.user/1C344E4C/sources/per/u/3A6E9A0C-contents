@@ -1,0 +1,67 @@
+reg.data <- read.csv('/Users/yun-yubeen/RTest/tannin.csv')
+
+names(reg.data)
+plot(tannin, growth, pch = 21, bg = "blue")
+
+search()
+
+model <- lm(growth ~ tannin, data = reg.data)
+summary(model)
+
+par(mfrow=c(2,2))
+plot(model)
+
+
+#5주차 실습 
+b <- seq(-1.43, -1, 0.002)
+sse <- numeric(length(b))
+for (i in 1:length(b)){
+  a <- mean(growth) - b[i]*mean(tannin)
+  residual <- growth - a - b[i] * tannin
+  sse[i] <- sum(residual^2)
+}
+
+plot(b, sse, type='1', ylim = c(19,24))
+arrows(-1.216, 20.07225, -1.216, 19, col = 'red')
+lines(b, sse)
+b[which(see == min(sse))]
+
+
+
+
+
+
+
+
+
+
+
+csdata <- read.csv("/Users/yun-yubeen/RTest/고객만족도데이터.csv",
+                   header = TRUE,
+                   stringsAsFactors = TRUE,
+                   sep = ",", fileEncoding = 'euc-kr')
+head(csdata, 3)
+
+resm2 <- lm(고객수~트레이너만족도+트레이너수, data = csdata)
+
+lm(formula = 고객수~트레이너만족도+트레이너수, data = csdata)
+install.packages('car')
+library(car)
+vif(resm2)
+
+
+
+#5주차  수업 
+#tannin 데이터도 다시 해보기 
+
+str(csdata)
+csdata$접객연수 <- as.factor(csdata$접객연수)
+csdata$입회특전 <- as.factor(csdata$입회특전)
+str(csdata)
+
+res3 <- lm(고객수~입지만족도+설비만족도+면적만족도+트레이너만족도+접객연수+입회특전,
+           data = csdata)
+summary(res3)
+
+extractAIC(res3)
+extractAIC(res3, k=log(30))

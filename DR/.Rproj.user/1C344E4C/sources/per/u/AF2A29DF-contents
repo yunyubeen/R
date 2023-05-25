@@ -1,0 +1,39 @@
+korn <- c(26, 46, 57, 36, 57, 26, 58, 37, 36, 56, 78, 95, 88, 90, 52, 56)
+engs <- c(35, 74, 73, 73, 62, 22, 67, 34, 22, 42, 65, 88, 90, 85, 46, 66)
+math <- c(35, 76, 38, 69, 25, 25, 87, 79, 36, 26, 22, 26, 58, 36, 25, 44)
+scin <- c(45, 89, 54, 55, 33, 45, 67, 89, 47, 36, 40, 56, 68, 45, 37, 56)
+grade <- cbind(korn, engs, math, scin)
+grade
+
+pca_ <- prcomp(grade)
+pca_result <- summary(pca_)
+pca_result
+plot(pca_result$importance[3,],
+         xlab = "PC",
+         ylab = "Cumulative Propertion", cex = 1, type = "o")
+abline(a = 0.8, b = 0, col = "red")
+
+biplot(pca_, scale = 0)
+
+install.packages("rattle")
+data(wine, package = "rattle")
+str(wine) # 187 x 14
+
+wine.selected <- wine[, -1] #178x13
+pca_ <- prcomp(wine.selected,
+               center = T, scale. = T)
+pca_result <- summary(pca_)
+pca_result
+
+plot(pca_result$importance[3,],
+     xlab = "PC",
+     ylab = "Cumulative Propertion", cex = 1, type = "o")
+abline(a = 0.8, b = 0, col = "red")
+
+Scores <- pca_$x
+Score1 <-  Scores[,1]
+Score2 <- Scores[,2]
+plot(Scores[,1:2], col = wine$Type)
+
+biplot(pca_)
+pca_$rotation

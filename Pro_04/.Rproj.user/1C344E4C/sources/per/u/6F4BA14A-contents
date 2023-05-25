@@ -1,0 +1,17 @@
+data <- read.csv('/Users/yun-yubeen/Downloads/과목시험결과.csv',
+                 header = TRUE, sep = ",", fileEncoding = 'euc-kr')
+head(test_score,3)
+res <- lm(final ~ t1 + t2 + t3 + t4 + t5, data = data )
+summary(res)
+
+library(car)
+install.packages('car')
+vif(res)
+
+restest2 <- lm(final ~ ~ t1 + t2 + t3 + t4 + t5, data = test_score)
+
+
+restest3 <- lm(final ~ t1 + t2, data = data)
+extractAIC(restest3)
+
+round(cor(test_score, 2)). #5주차 test_score 해놓고 다시 실행해보기 

@@ -1,0 +1,15 @@
+eelData <- read.delim("/Users/yun-yubeen/RTest/eel.dat", header = TRUE, stringsAsFactors = TRUE)
+head(eelData)
+str(eelData)
+
+eelData$Cured <- relevel(eelData$Cured, "Not Cured")
+eelData$Intervention <- relevel(eelData$Intervention, "No Treatment")
+str(eelData)
+
+eelmodel.1 <- glm(Cured ~ Intervention, data = eelData, family = "binomial")
+summary(eelmodel.1)
+
+exp(eelmodel.1$coefficients)
+
+eelModel.2 <- glm(Cured ~ ., data = eelData, family = "binoimial")
+summary(eelModel.2)

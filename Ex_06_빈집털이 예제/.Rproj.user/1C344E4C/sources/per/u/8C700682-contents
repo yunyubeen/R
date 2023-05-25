@@ -1,0 +1,34 @@
+data_path <- "/Users/yun-yubeen/RTest/빈집털이조사.csv"
+aks <- read.csv(data_path, sep = ",", header = TRUE, fileEncoding = "euc-kr")
+
+aks$빈집털이01 <- ifelse(aks$빈집털이 == "있음", 1, 0)
+aks$보안01 <- ifelse(aks$보안 == "가입", 1, 0)
+aks$경비견01 <- ifelse(aks$경비견 == "있음", 1, 0)
+head(aks)
+
+aks.model <- glm(빈집털이01 ~ 부재시간 + 대화 + 건축년수 + 보안01 + 경비견01,
+                 family = binomial, data = aks)
+summary(aks.model)
+
+aks.model$coefficients
+exp(aks.model$coefficients)
+
+
+install.packages("ResourceSelection")
+library(ResourceSelection)
+hoslem.test(x = aks.model$y, y = fitted(aks.model))
+
+extractAIC(aks.model)
+extractAIC(aks.model, k = log(nrow(aks.model$data)))
+
+aks.out_null <- glm(빈집털이01 ~ 1, family = binomial, data = aks)
+anova(aks.out_null, aks.model, test = "Chisq")
+
+step(aks.out_null, direction = "both",
+     scope = (~ 부재시간 + 대화 + 건축년수 + 보안01 + 경비견01))
+
+library(car)
+install.packages(car)
+install.packages("car")
+
+vif(aks.model)
